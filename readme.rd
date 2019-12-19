@@ -12,6 +12,7 @@ bin/h2.bat 실행
 Version : 3.9.11
 
 2. 소스파일 설명
+ - Spring Boot로 프로젝트 구성하여 진행 함
  - 테이블 DDL 파일 (HOUFINCINST.sql / HOUFINCSUPLLIST.sql)
  - 데이터파일 (sample.csv)
 
