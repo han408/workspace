@@ -17,7 +17,7 @@ public class InstituteList {
     @Autowired
     private HoufincinstRepository houfincinstRepository;
 	
-    // ê¸ˆìœµê¸°ê´€ ëª©ë¡ ì¡°íšŒ
+    //±â°üÁ¶È¸
     public List<Houfincinst> findInstitutes() {
         return houfincinstRepository.findAll();
     }

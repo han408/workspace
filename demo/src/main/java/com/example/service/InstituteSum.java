@@ -1,13 +1,12 @@
 package com.example.service;
 
 import java.util.List;
-
-import org.hibernate.annotations.Sort;
+import javax.transaction.Transactional;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import com.example.model.Houfincsuplsum;
-import com.example.repository.HoufincsuplsumRepository;
+import com.example.dao.InstituteDao;
 
 
 /**
@@ -15,19 +14,46 @@ import com.example.repository.HoufincsuplsumRepository;
  */
 @Service
 public class InstituteSum {
-	
-    @Autowired
-    private HoufincsuplsumRepository houfincsuplsumRepository;
-	
-    // 금융기관 목록 조회
-    public List<Houfincsuplsum> sumInstitutes() {
 
-		List<Houfincsuplsum> houfincsuplsums = houfincsuplsumRepository.findAll();
+    @Autowired
+	private InstituteDao instituteDao;
+
+    @SuppressWarnings("unchecked")
+	@Transactional
+    public JSONObject sumInstitutes() {
     	
-    	for(Houfincsuplsum houfincsuplsum  : houfincsuplsums) {
-    		System.out.println("testmemberList" + houfincsuplsum.toString());
+    	List<Object[]> houfincsuplsums = instituteDao.yearSum();
+    	JSONObject jsonResult = new JSONObject();
+    	JSONArray jsonArryResult = new JSONArray();
+		
+    	for(Object[] houfincsuplsum  : houfincsuplsums) {
+    		
+    		JSONObject json = new JSONObject();
+    		JSONArray jsonArry = new JSONArray();
+    		
+    		List<Object[]> houfincsuplsumInstitutes = instituteDao.instituteYearSum((String)houfincsuplsum[0]);
+
+    		json.put("year", houfincsuplsum[0]);
+    		json.put("total_amount", houfincsuplsum[1]);
+    		
+    		for(Object[] houfincsuplsumInstitute  : houfincsuplsumInstitutes) {
+    			
+    			JSONObject json_institute = new JSONObject();
+        		json_institute.put(houfincsuplsumInstitute[0], houfincsuplsumInstitute[1]);
+        		jsonArry.add(json_institute);
+
+        	}
+    		
+    		json.put("detail_amount", jsonArry);
+    		jsonArryResult.add(json);
+
     	}
     	
-		return houfincsuplsums;
+    	jsonResult.put("주택금융 공급현황",jsonArryResult);
+    	
+    	return jsonResult;
+
     }
 }
+
+

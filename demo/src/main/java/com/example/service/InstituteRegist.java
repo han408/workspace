@@ -37,7 +37,12 @@ public class InstituteRegist {
 			Houfincinst houfincinst = new Houfincinst();
 
 			houfincinst.setInstituteCode("0"+Integer.toString(code));
-			houfincinst.setInstituteName(ar[i]);
+			
+			// 콤마로 분할
+			String[] sb = ar[i].toString().split("1");
+			String[] wb = sb[0].toString().split("\\(");
+			
+			houfincinst.setInstituteName(wb[0]);
 			
 			// 등록
 			houfincinstRepository.save(houfincinst);
@@ -72,6 +77,7 @@ public class InstituteRegist {
 
 	}
 
+	@SuppressWarnings("resource")
 	public void regist() {
 
 		try {

@@ -1,13 +1,12 @@
 package com.example.service;
 
 import java.util.List;
-
-import org.hibernate.annotations.Sort;
+import javax.transaction.Transactional;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import com.example.model.Houfincsuplsum;
-import com.example.repository.HoufincsuplsumRepository;
+import com.example.dao.InstituteDao;
 
 
 /**
@@ -15,19 +14,61 @@ import com.example.repository.HoufincsuplsumRepository;
  */
 @Service
 public class InstituteMinMax {
-	
+    
     @Autowired
-    private HoufincsuplsumRepository houfincsuplsumRepository;
-	
-    // Í∏àÏúµÍ∏∞Í¥Ä Î™©Î°ù Ï°∞Ìöå
-    public List<Houfincsuplsum> sumInstitutes() {
+	private InstituteDao instituteDao;
 
-		List<Houfincsuplsum> houfincsuplsums = houfincsuplsumRepository.findAll();
+    @SuppressWarnings("unchecked")
+	@Transactional
+    public JSONObject minmaxInstitutes() {
     	
-    	for(Houfincsuplsum houfincsuplsum  : houfincsuplsums) {
-    		System.out.println("testmemberList" + houfincsuplsum.toString());
-    	}
+    	List<Object[]> houfincsuplsums = instituteDao.instituteAvgSum();
+    	JSONObject json = new JSONObject();
+    	JSONObject json2 = new JSONObject();
+    	JSONArray jsonArry = new JSONArray();
     	
-		return houfincsuplsums;
+		int flag = 0;
+		double minAmt = 0;
+		double maxAmt = 0;
+		String minyear = "";
+		String maxyear = "";
+		
+    	for(Object[] houfincsuplsum  : houfincsuplsums) {
+
+			if(flag == 0) {
+				maxyear = (String)houfincsuplsum[0];
+				maxAmt = (double)houfincsuplsum[1];
+				minyear = (String)houfincsuplsum[0];
+				minAmt = (double)houfincsuplsum[1];
+			} else {
+    			if( maxAmt < (double)houfincsuplsum[1] ) {
+    				maxyear = (String)houfincsuplsum[0];
+    				maxAmt = (double)houfincsuplsum[1];
+    			}
+    			
+    			if( minAmt > (double)houfincsuplsum[1] ) {
+    				minyear = (String)houfincsuplsum[0];
+    				minAmt = (double)houfincsuplsum[1];
+    			}
+			}
+			
+			flag = 1;
+    	}    	
+    	
+    	
+		json.put("year", minyear);
+		json.put("amount", minAmt);
+		jsonArry.add(json);
+		
+		json = new JSONObject();
+		json.put("year", maxyear);
+		json.put("amount", maxAmt);
+		jsonArry.add(json);
+    	
+    	json2.put("bank","ø‹»Ø¿∫«‡");
+    	json2.put("support_amount", jsonArry);
+
+    	return json2;
+
     }
 }
