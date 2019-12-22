@@ -1,15 +1,17 @@
 package com.example.controller;
 
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.example.model.Houfincinst;
-import com.example.model.Houfincsuplsum;
 import com.example.service.InstituteList;
 import com.example.service.InstituteRegist;
 import com.example.service.InstituteSum;
+import com.example.service.InstituteMax;
+import com.example.service.InstituteMinMax;
 
 import java.util.List;
 
@@ -28,7 +30,13 @@ public class InstituteController {
 	@Autowired
     private InstituteSum instituteSum;
 	
-	//±‚∞¸µÓ∑œ
+	@Autowired
+    private InstituteMax instituteMax;
+	
+	@Autowired
+    private InstituteMinMax instituteMinMax;
+	
+	//Îì±Î°ù
     @RequestMapping(value = "/instituteRegist", method = RequestMethod.GET)
     public String instituteRegist() {
 
@@ -41,7 +49,7 @@ public class InstituteController {
 		}
     }
 	
-    //±‚∞¸¡∂»∏
+    //Î™©Î°ùÏ°∞Ìöå
     @RequestMapping(value = "/instituteList", method = RequestMethod.GET)
     public List<Houfincinst> instituteList() {
 
@@ -49,12 +57,28 @@ public class InstituteController {
         return houfincinst;
     }
     
-    //«’∞Ë¡∂»∏
+    //Ìï©Í≥ÑÏ°∞Ìöå
     @RequestMapping(value = "/instituteSumList", method = RequestMethod.GET)
-    public List<Houfincsuplsum> instituteSum() {
+    public JSONObject instituteSum() {
 
-        List<Houfincsuplsum> houfincsuplsum = instituteSum.sumInstitutes();
+    	JSONObject houfincsuplsum = instituteSum.sumInstitutes();
         return houfincsuplsum;
+    }
+    
+    //maxÏ°∞Ìöå
+    @RequestMapping(value = "/instituteMaxList", method = RequestMethod.GET)
+    public JSONArray InstituteMax() {
+
+    	JSONArray houfincsuplmax = instituteMax.maxInstitutes();
+        return houfincsuplmax;
+    }
+    
+    //minmaxÏ°∞Ìöå
+    @RequestMapping(value = "/instituteMinMaxList", method = RequestMethod.GET)
+    public JSONObject instituteMinMax() {
+
+    	JSONObject houfincsuplMinMax = instituteMinMax.minmaxInstitutes();
+        return houfincsuplMinMax;
     }
 
 }
