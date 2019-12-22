@@ -1,7 +1,6 @@
 package com.example.model;
 
 import java.io.Serializable;
-
 import javax.persistence.*;
 
 /**
@@ -13,7 +12,9 @@ import javax.persistence.*;
 @Table(name="HOUFINCSUPLLIST")
 public class Houfincsuplsum implements Serializable {
 
-    @Id
+	private static final long serialVersionUID = 1L;
+
+	@Id
     @Column(name = "YEAR")
     private String year;
     
